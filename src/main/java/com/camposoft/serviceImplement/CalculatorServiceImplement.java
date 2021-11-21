@@ -23,7 +23,11 @@ public class CalculatorServiceImplement implements CalculatorService {
 			return calculator;
 
 		case "Substraction":
-			// calculator.setResult(substraction());
+			calculator.setResult(substraction());
+			return calculator;
+
+		case "Division":
+			calculator.setResult(division());
 			return calculator;
 		default:
 			break;
@@ -34,7 +38,6 @@ public class CalculatorServiceImplement implements CalculatorService {
 	@Override
 	public void sendOperand(CalculatorDTO calculatorDTO) {
 		calculator.addOperand(calculatorDTO.getOperand());
-		System.out.println(calculator.getOperands().size());
 	}
 
 	private Integer sum() {
@@ -45,4 +48,19 @@ public class CalculatorServiceImplement implements CalculatorService {
 		return calculator.getOperands().stream().mapToInt(x -> x).reduce(1, Math::multiplyExact);
 	}
 
+	private Integer division() {
+		Integer result = calculator.getOperands().get(0);
+		for (Integer i = 1; i < calculator.getOperands().size(); i++) {
+			result = result / calculator.getOperands().get(i);
+		}
+		return result;
+	}
+
+	private Integer substraction() {
+		Integer result = calculator.getOperands().get(0);
+		for (Integer i = 1; i < calculator.getOperands().size(); i++) {
+			result -= calculator.getOperands().get(i);
+		}
+		return result;
+	}
 }
