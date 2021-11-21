@@ -1,9 +1,10 @@
 package com.camposoft.service;
 
-import java.util.List;
+import com.camposoft.dto.CalculatorDTO;
 
 public interface CalculatorService {
 
-	public Integer add(List<Integer> nums);
+	public CalculatorDTO operation(String operation);
 
+	public void sendOperand(CalculatorDTO calculatorDTO);
 }
