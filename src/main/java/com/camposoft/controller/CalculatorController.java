@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.camposoft.dto.CalculatorDTO;
+import com.camposoft.enums.OperationEnum;
 import com.camposoft.service.CalculatorService;
 
 @RestController
@@ -22,6 +23,9 @@ public class CalculatorController {
 
 	@GetMapping("/operation")
 	public <T> ResponseEntity<CalculatorDTO> operation(@RequestParam(value = "operation") String operation) {
+		System.out.println();OperationEnum.stream().filter(op -> op.equals(operation));
+		
+		// if (operation. )
 		CalculatorDTO calculatorDTO = calculatorService.operation(operation);
 		 return new ResponseEntity<CalculatorDTO>(calculatorDTO, HttpStatus.OK);
 	}

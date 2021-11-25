@@ -3,7 +3,7 @@ package com.camposoft.dto;
 public class UserDTO {
 
 	private String user;
-	private String pwd;
+	private String password;
 	private String token;
 
 	public String getUser() {
@@ -14,12 +14,12 @@ public class UserDTO {
 		this.user = user;
 	}
 
-	public String getPwd() {
-		return pwd;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
+	public void setPassword(String pwd) {
+		this.password = pwd;
 	}
 
 	public String getToken() {

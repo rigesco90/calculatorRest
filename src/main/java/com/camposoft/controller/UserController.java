@@ -1,51 +1,36 @@
 package com.camposoft.controller;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.camposoft.dto.UserDTO;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import com.camposoft.security.JWTAuthorizationFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-	private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-	private static final String BEARER_PREFIX = "Bearer ";
-
 	@PostMapping("/login")
-	public UserDTO login(@RequestParam("user") String username, @RequestParam("password") String pwd) {
+	public void login(@RequestParam("user") String username, @RequestParam("password") String pwd,
+			HttpServletResponse response) throws IOException {
 
-		String token = getJWTToken(username);
-		UserDTO user = new UserDTO();
-		user.setUser(username);
-		user.setToken(token);
-		return user;
+		String token = JWTAuthorizationFilter.getJWTToken(username);
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("user", username);
+		body.put("token", token);
+		body.put("msg", "Loguin exitoso...!");
 
-	}
+		response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+		response.setStatus(200);
+		response.setContentType("application/json");
 
-	private String getJWTToken(String username) {
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN");
-
-		String token = Jwts.builder().setId("C4lcul4t0r").setSubject(username)
-				.claim("authorities",
-						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000)).signWith(SECRET_KEY).compact();
-
-		return BEARER_PREFIX + token;
 	}
 
 }
