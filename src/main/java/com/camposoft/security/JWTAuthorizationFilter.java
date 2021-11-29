@@ -49,7 +49,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		claims.put("authorities", new ObjectMapper().writeValueAsString(grantedAuthorities));
 		String token = Jwts.builder().setClaims(claims).setSubject(username).signWith(SECRET_KEY)
 				.setExpiration(new Date(System.currentTimeMillis() + 7200000L)).compact();
-
 		return PREFIX + token;
 	}
 
@@ -58,7 +57,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		try {
 			if (checkJWTToken(request, response)) {
-				Claims claims = validateToken(request);
+				Claims claims = validateToken(request, response);
 				if (null != claims && null != claims.get("authorities")) {
 					setUpSpringAuthentication(claims);
 				} else {
@@ -70,18 +69,19 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso Denegado.!!");
 			return;
 		}
 	}
 
-	private Claims validateToken(HttpServletRequest request) {
+	private Claims validateToken(HttpServletRequest request, HttpServletResponse res) throws IOException {
 		String jwt = request.getHeader("Authorization");
 		try {
 			return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(jwt.replace(PREFIX, ""))
 					.getBody();
 		} catch (JwtException e) {
-			logger.info(" <<-- validateToken -->> Error al Obtener token, el error es: " + e.getMessage());
+			res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			((HttpServletResponse) res).sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso Denegado.!!");
 			return null;
 		}
 	}
@@ -90,18 +90,15 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	private void setUpSpringAuthentication(Claims claims) throws JsonParseException, JsonMappingException, IOException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
-
 		objectMapper.registerModule(new SimpleModule().addDeserializer(SimpleGrantedAuthority.class,
 				new SimpleGrantedAuthorityDeserializer()));
 		String username = claims.getSubject();
 		Object roles = claims.get("authorities");
-		System.out.println(roles);
 		Collection<? extends GrantedAuthority> authorities = Arrays
 				.asList(objectMapper.readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
 
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
 		SecurityContextHolder.getContext().setAuthentication(auth);
-
 	}
 
 	private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {

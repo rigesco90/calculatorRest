@@ -1,24 +1,21 @@
 package com.camposoft.exceptions;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import java.util.Map;
+
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@RestControllerAdvice
-public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@ControllerAdvice
+public class GlobalResponseEntityExceptionHandler {
 
-	@Override
-	protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
-			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		return errorResponse(HttpStatus.BAD_REQUEST, "Required request params missing");
-	}
-
-	private ResponseEntity<Object> errorResponse(HttpStatus status, String message) {
-		return ResponseEntity.status(status).body(message);
+	@ExceptionHandler
+	private ResponseEntity<Object> errorResponse(GenericException e) {
+		return new ResponseEntity<>(Map.of("messageId", e.getMessageId(), "requestDateTime", e.getRequestDateTime(),
+				"Error", e.getRtaDTO()), e.getStatus());
 	}
 
 }
