@@ -1,5 +1,6 @@
 package com.camposoft.serviceImplement;
 
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.camposoft.dto.CalculatorDTO;
@@ -49,11 +50,18 @@ public class CalculatorServiceImplement implements CalculatorService {
 	}
 
 	private Integer division() {
-		Integer result = calculator.getOperands().get(0);
-		for (Integer i = 1; i < calculator.getOperands().size(); i++) {
-			result = result / calculator.getOperands().get(i);
+		try {
+			Integer result = calculator.getOperands().get(0);
+			for (Integer i = 1; i < calculator.getOperands().size(); i++) {
+				result = result / calculator.getOperands().get(i);
+			}
+			return result;
+			
+		} catch (Exception e) {
+			Logger
 		}
-		return result;
+		return null;
+		
 	}
 
 	private Integer substraction() {
