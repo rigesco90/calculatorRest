@@ -1,5 +1,6 @@
 package com.camposoft.serviceImplement;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import com.camposoft.service.CalculatorService;
 public class CalculatorServiceImplement implements CalculatorService {
 
 	private CalculatorDTO calculator = new CalculatorDTO();
+	private static final Logger logger = LogManager.getLogger(CalculatorServiceImplement.class);
 
 	@Override
 	public CalculatorDTO operation(String operation) {
@@ -56,12 +58,13 @@ public class CalculatorServiceImplement implements CalculatorService {
 				result = result / calculator.getOperands().get(i);
 			}
 			return result;
-			
+
 		} catch (Exception e) {
-			Logger
+
+			logger.info("  >> Hubo un error al realizar operacion::::: " + e.getMessage());
 		}
 		return null;
-		
+
 	}
 
 	private Integer substraction() {
