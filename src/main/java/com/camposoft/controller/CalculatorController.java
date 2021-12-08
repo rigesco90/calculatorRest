@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.camposoft.dto.CalculatorDTO;
-import com.camposoft.dto.GenericRespuesta;
+import com.camposoft.dto.GenericRespuestaDTO;
 import com.camposoft.enums.OperationEnum;
 import com.camposoft.exceptions.GenericException;
 import com.camposoft.service.CalculatorService;
@@ -32,7 +32,7 @@ public class CalculatorController {
 			return new ResponseEntity<CalculatorDTO>(calculatorDTO, HttpStatus.OK);
 		} else {
 			throw new GenericException(
-					new GenericRespuesta(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
+					new GenericRespuestaDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
 							"BE".concat(Integer.toString(HttpStatus.BAD_REQUEST.value())),
 							"La operación envaida no hace parte de los valores válidos."),
 					HttpStatus.BAD_REQUEST);
@@ -41,19 +41,19 @@ public class CalculatorController {
 	}
 
 	@PostMapping("/sendOperand")
-	public ResponseEntity<GenericRespuesta> sendOperand(@RequestBody CalculatorDTO calculatorDTO) {
-		ResponseEntity<GenericRespuesta> responseEntity = null;
+	public ResponseEntity<GenericRespuestaDTO> sendOperand(@RequestBody CalculatorDTO calculatorDTO) {
+		ResponseEntity<GenericRespuestaDTO> responseEntity = null;
 		try {
-			if (isNumberRegex(calculatorDTO.getOperand())) {
+			if (isNumberRegEx(calculatorDTO.getOperand())) {
 				calculatorService.sendOperand(calculatorDTO);
-				responseEntity = new ResponseEntity<GenericRespuesta>(
-						new GenericRespuesta(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),
+				responseEntity = new ResponseEntity<GenericRespuestaDTO>(
+						new GenericRespuestaDTO(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),
 								Integer.toString(HttpStatus.OK.value()), "El operando Se agrego correctamente."),
 						HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			throw new GenericException(
-					new GenericRespuesta(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
+					new GenericRespuestaDTO(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
 							"BE".concat(Integer.toString(HttpStatus.BAD_REQUEST.value())),
 							"El operando envaido no es un número."),
 					HttpStatus.BAD_REQUEST);
@@ -61,7 +61,7 @@ public class CalculatorController {
 		return responseEntity;
 	}
 
-	public static boolean isNumberRegex(Integer number) {
+	public static boolean isNumberRegEx(Integer number) {
 		return number.toString().matches("^-?\\d*\\.{0,1}\\d+$");
 	}
 }

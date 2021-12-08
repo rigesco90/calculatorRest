@@ -1,13 +1,13 @@
 package com.camposoft.dto;
 
-public class GenericRespuesta {
+public class GenericRespuestaDTO {
 
 	private int status;
 	private String title;
 	private String code;
 	private String detail;
 
-	public GenericRespuesta(int status, String title, String code, String detail) {
+	public GenericRespuestaDTO(int status, String title, String code, String detail) {
 		this.status = status;
 		this.title = title;
 		this.code = code;

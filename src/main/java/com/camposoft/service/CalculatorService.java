@@ -6,5 +6,5 @@ public interface CalculatorService {
 
 	public CalculatorDTO operation(String operation);
 
-	public void sendOperand(CalculatorDTO calculatorDTO);
+	public CalculatorDTO sendOperand(CalculatorDTO calculatorDTO);
 }

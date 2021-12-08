@@ -5,16 +5,16 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 
-import com.camposoft.dto.GenericRespuesta;
+import com.camposoft.dto.GenericRespuestaDTO;
 
 public class GenericException extends RuntimeException {
 	private static final long serialVersionUID = -4522850618140183651L;
 
 	private HttpStatus status;
-	private GenericRespuesta rtaDTO;
+	private GenericRespuestaDTO rtaDTO;
 
-	public GenericException(GenericRespuesta rta, HttpStatus badRequest) {
-		this.status = badRequest;
+	public GenericException(GenericRespuestaDTO rta, HttpStatus httpStatus) {
+		this.status = httpStatus;
 		this.rtaDTO = rta;
 	}
 
@@ -34,11 +34,11 @@ public class GenericException extends RuntimeException {
 		this.status = status;
 	}
 
-	public GenericRespuesta getRtaDTO() {
+	public GenericRespuestaDTO getRtaDTO() {
 		return rtaDTO;
 	}
 
-	public void setRtaDTO(GenericRespuesta rtaDTO) {
+	public void setRtaDTO(GenericRespuestaDTO rtaDTO) {
 		this.rtaDTO = rtaDTO;
 	}
 
