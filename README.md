@@ -6,102 +6,107 @@ _Para hacer uso de los servicios expuestos en la Calculadora debera obtener un *
 
 ## Comenzando 🚀
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
+_Estas instrucciones te permitirán tener el proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
 Mira **Deployment** para conocer como desplegar el proyecto.
 
 
 ### Pre-requisitos 📋
 
-_Que cosas necesitas para instalar el software y como instalarlas_
+_Para ejecutar de manera exitosa la **Calculadora** en tu maquina local es necesario tener instalado **Java** o en su defecto un **JRE** y sus debidas variables de entorno configuradas: (Java y Gradle), si desconoces como hacerlo puedes consultar la documentación donde se explica paso a paso de como hacerlo_
+
+* [Guia de configuración](https://www.java.com/es/download/help/path_es.html) - Variable de entorno Java.
+
+* [Guia de configuración](https://docs.gradle.org/current/userguide/installation.html) - Variable de entorno Gradle.
+
+_Para verificar si se instaló y configuró de manera correcta tanto Java como Gradle puedes abrir una consola de comandos y ejecutar los siguientes comandos._
 
 ```
-Da un ejemplo
+java -version
+gradle -v
 ```
-
-### Instalación 🔧
-
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
-
-_Dí cómo será ese paso_
-
-```
-Da un ejemplo
-```
-
-_Y repite_
-
-```
-hasta finalizar
-```
-
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
-
 ## Ejecutando las pruebas ⚙️
 
 _Explica como ejecutar las pruebas automatizadas para este sistema_
 
-### Analice las pruebas end-to-end 🔩
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
-
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
-
 ## Despliegue 📦
 
-_Agrega notas adicionales sobre como hacer deploy_
+_Para tu mayor comodidad se anexa el 'ejecutable' de la aplicación en el repositorio, para ello puedes clonar o descargar de la rama Develop y en la carpeta ./calculatorRest/exe está adjunto el archivo: **calculadora-web-0.0.2.jar** el cual puedes desplegar ejecutando el siguiente comando._
+
+```
+java -jar calculadora-web-0.0.2.jar
+```
 
 ## Construido con 🛠️
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
+_La **Calculadora** se ha construido con_
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
-* [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
+* [SpringBoot](https://spring.io/projects/spring-boot) - El framework web usado
+* [Gradle](https://gradle.org/) - Manejador de dependencias
+* [JWT](https://jwt.io/) - Usado para generar Token de seguridad y poder consumir los endpoints que exponen las funcionalidades de la calculadora
 
-## Contribuyendo 🖇️
+## Probando la funcionalidad 🖇️
 
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
+Para poder probar la funcionalidad es recomendable utilizar un cliente HTTP como **Postman**; por medio del cual debes loguearte en la aplicación para poder hacer uso de sus funcionalidades, para ello necesitas hacer una petición **HTTP POST** en [Loguin](http://localhost:8080/user/login)  y enviar los parametros: **user** y **password** con cualquier valor como se muestra en la imagen.
 
-## Wiki 📖
+![Image Loguin](https://raw.githubusercontent.com/rigesco90/static/master/static/img/Loguin.png)
 
-Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
+En la respuesta podemos observar que nos entrega un Token, el cual debemos usar para hacer las demas peticiones (Agregar Operando y realizar una Operación)
 
-## Versionado 📌
+### Agregar operando
 
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
+_Para agregar los operandos debes hacer una peticion **HTTP POST** [Add Operand](http://localhost:8080/calculator/sendOperand) con un **Header** Authorization: Token:_
 
-## Autores ✒️
+```
+Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6Ilt7XCJhdXRob3JpdHlcIjpcIkFETUlOXCJ9XSIsInN1YiI6InJjYW1wbyIsImV4cCI6MTYzOTAyMDUxN30.PaHZVC_vDOk4QuHSd9N1m047CwdWq7tAl-RgNp1ftnmXEX2peZdupDxJ3X5yLJgFJG3PGfi8r3_jFX6JMNaPIQ
+```
 
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
+EJEMPLO:
 
-* **Andrés Villanueva** - *Trabajo Inicial* - [villanuevand](https://github.com/villanuevand)
-* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
+![Image Token](https://raw.githubusercontent.com/rigesco90/static/master/static/img/token.png)
 
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
+_Y un body con el atributo "operand" y su respectivo valor:_
+```json
+{
+    "operand": 3
+}
+```
+_Puedes enviar varios operandos para realizar la respectiva operación_
 
-## Licencia 📄
+EJEMPLO:
 
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
+![Image Add Operand](https://raw.githubusercontent.com/rigesco90/static/master/static/img/addOperand.png)
 
-## Expresiones de Gratitud 🎁
+### Probando Operaciones
 
-* Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
-* etc.
+_SUMA:_
+
+Se debe consumir el endpoint de las operaciones el cual es una petición **HTTP GET** [Operación](http://localhost:8080/calculator/operation?operation=Sum)
+
+**Valores Aceptados como parametro:**
+
+```
+Sum
+Multiply
+Substraction
+Division
+```
+
+**Authorization Operation**
+![Image Add Operand](https://raw.githubusercontent.com/rigesco90/static/master/static/img/autorizacionSuma.png)
+
+**Consumo Operation**
+![Image Add Operand](https://raw.githubusercontent.com/rigesco90/static/master/static/img/Sum.png)
+
+**Resultado Operation**
+![Image Add Operand](https://raw.githubusercontent.com/rigesco90/static/master/static/img/ResultadoSuma.png)
+
+**Excepción operación enviada no válida**
+![Image Add Operand](https://raw.githubusercontent.com/rigesco90/static/master/static/img/ExceptioOperation.png)
 
 
+## Conclusión ✒️
+_La apliacación Calculadora Api Rest fue diseñada con una arquitectura totalmente escalable, diseñada con N capas, las cuales tienen su respectiva responsabilidad; exponer servicios rest, logica de negocio y seguridad, enfocada a ser un microservicio el cual tiene como objetivo ser solo una calculadora
+## Autor ✒️
 
----
-⌨️ con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
+* **Rigo Esleider Campo Ordoñez** - *Trabajo Inicial* - [Rigo Campo](https://github.com/rigesco90)
